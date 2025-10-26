@@ -1,0 +1,29 @@
+{
+  "name": "trabalho01ppi",
+  "version": "1.0.0",
+  "description": "trabalho01 ppi usando node e express",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andressaquiosi/trabalho01PPI.git"
+  },
+  "keywords": [
+    "http",
+    "express",
+    "node"
+  ],
+  "author": "andressa quiosi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andressaquiosi/trabalho01PPI/issues"
+  },
+  "homepage": "https://github.com/andressaquiosi/trabalho01PPI#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

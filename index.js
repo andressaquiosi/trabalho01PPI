@@ -1,15 +1,15 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+import express from 'express';
+const host = '0.0.0.0';
+const porta = 3000;
+const server = express();
 
-app.get('/', (req, res) => {
+server.get('/', (req, res) => {
     if (Object.keys(req.query).length === 0) {
         return res.send(getInstructionPage());
     }
     const { idade, sexo, salario_base, anoContratacao, matricula } = req.query;
     const validationErrors = [];
     const currentYear = new Date().getFullYear();
-
     const parsedIdade = parseInt(idade);
     if (isNaN(parsedIdade) || parsedIdade <= 16) {
         validationErrors.push("Idade deve ser um número maior que 16.");
@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
     }
     const anosDeServico = currentYear - parsedAno;
     let reajustePercentual = 0;
-    let valorFixo = 0;
+    let valorFixo = 0; // Negativo para desconto, positivo para acréscimo
     let ruleFound = false;
 
     if (parsedIdade >= 18 && parsedIdade <= 39) {
@@ -71,7 +71,6 @@ app.get('/', (req, res) => {
     }
     const salarioIntermediario = parsedSalario * (1 + (reajustePercentual / 100));
     const novoSalario = salarioIntermediario + valorFixo;
-
     const resultData = {
         matricula: parsedMatricula,
         idade: parsedIdade,
@@ -81,13 +80,11 @@ app.get('/', (req, res) => {
         anosDeServico: anosDeServico,
         novoSalario: novoSalario
     };
-    
     return res.send(getResultPage(resultData));
 });
-
 function getStyles() {
     return `
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; display: grid; place-items: center; min-height: 90vh; }
+        body { font-family: monospace; background-color: #f4f7f6; margin: 0; padding: 20px; display: grid; place-items: center; min-height: 90vh; }
         .container { max-width: 800px; margin: 20px auto; padding: 25px 40px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         h1, h2 { color: #333; }
         pre, code { background-color: #f1f1f1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; display: block; overflow-x: auto; font-family: "Courier New", Courier, monospace; }
@@ -103,14 +100,13 @@ function getStyles() {
         a:hover { text-decoration: underline; }
     `;
 }
-
 function getInstructionPage() {
     return `
         <html>
             <head><title>Cálculo de Reajuste</title><style>${getStyles()}</style></head>
             <body>
                 <div class="container">
-                    <h1>Instruções para Cálculo de Reajuste Salarial</h1>
+                    <h1>Cálculo de Reajuste Salarial</h1>
                     <p>Para calcular o reajuste, informe os dados do funcionário na URL (na barra de endereço do navegador).</p>
                     <p>Use o seguinte formato:</p>
                     <pre>/?idade=...&sexo=...&salario_base=...&anoContratacao=...&matricula=...</pre>
@@ -134,7 +130,6 @@ function getInstructionPage() {
         </html>
     `;
 }
-
 function getErrorPage(errors) {
     return `
         <html>
@@ -152,7 +147,6 @@ function getErrorPage(errors) {
         </html>
     `;
 }
-
 function getResultPage(data) {
     return `
         <html>
@@ -179,7 +173,7 @@ function getResultPage(data) {
         </html>
     `;
 }
-
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+server.listen(porta, host, () => {
+    console.log(`Servidor escutando em http://${host}:${porta}`);
+    console.log(`Para testar no seu navegador, acesse: http://localhost:${porta}`);
 });
